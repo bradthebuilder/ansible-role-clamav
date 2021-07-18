@@ -1,0 +1,13 @@
+[Unit]
+Description=ClamAV virus scan
+Requires=clamd@scan.service
+After=clamd@scan.service
+
+[Service]
+ExecStart=-/usr/bin/clamdscan --fdpass /    
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=clamdscan
+
+[Install]
+WantedBy=multi-user.target

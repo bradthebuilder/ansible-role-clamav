@@ -5,11 +5,13 @@
 - include_tasks: setup-vars.yml
 
 - name: Ensure ClamAV packages are installed.
+  become: true
   package: name={{ item }} state=present
   with_items: "{{ clamav_packages }}"
   register: clamav_packages_install
 
 - name: Run freshclam after ClamAV packages change.
+  become: true
   command: freshclam
   when: clamav_packages_install.changed
   register: freshclam_result
@@ -33,13 +35,29 @@
   with_items: "{{ clamav_daemon_configuration_changes }}"
 
 - name: Ensure ClamAV daemon is running (if configured).
+  become: true
   service:
     name: "{{ clamav_daemon }}"
     state: "{{ clamav_daemon_state }}"
     enabled: "{{ clamav_daemon_enabled }}"
 
 - name: Ensure ClamAV freshclam daemon is running (if configured).
+  become: true
   service:
     name: "{{ clamav_freshclam_daemon }}"
     state: "{{ clamav_freshclam_daemon_state }}"
     enabled: "{{ clamav_freshclam_daemon_enabled }}"
+
+- name: Ensure ClamAV clamdscan service is enabled.
+  become: true
+  service:
+    name: "clamdscan.service"
+    enabled: true
+
+- name: Ensure ClamAV clamdscan timer is enabled.
+  become: true
+  service:
+    name: "clamdscan.timer"
+    enabled: true
+    state: started
+

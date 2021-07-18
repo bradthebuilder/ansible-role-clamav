@@ -1,0 +1,6 @@
+/var/log/clamdscan.log {
+    missingok
+    notifempty
+    rotate 4
+    weekly
+}

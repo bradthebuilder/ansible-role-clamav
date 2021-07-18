@@ -1,0 +1,26 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Update system
+      become: true
+      yum:
+        name: '*'
+        state: latest
+
+    - name: Install epel
+      become: true
+      yum:
+        name: epel-release
+        state: present
+
+    - name: Disable SELinux
+      become: true
+      replace:
+        path: /etc/selinux/config
+        regexp: 'SELINUX=enforcing'
+        replace: 'SELINUX=permissive'
+
+    - name: Reboot
+      become: true
+      reboot:

@@ -1,7 +1,5 @@
 # Ansible Role: ClamAV
 
-[![CI](https://github.com/geerlingguy/ansible-role-clamav/workflows/CI/badge.svg?event=push)](https://github.com/geerlingguy/ansible-role-clamav/actions?query=workflow%3ACI)
-
 Installs ClamAV on RedHat/CentOS and Debian/Ubuntu Linux servers.
 
 ## Requirements
@@ -51,7 +49,7 @@ None.
     - hosts: servers
       become: true
       roles:
-        - geerlingguy.clamav
+        - bradthebuilder.clamav
 
 ## License
 
@@ -59,4 +57,4 @@ MIT / BSD
 
 ## Author Information
 
-This role was created in 2017 by [Jeff Geerling](https://www.jeffgeerling.com/), author of [Ansible for DevOps](https://www.ansiblefordevops.com/).
+This role was initially created in 2017 by [Jeff Geerling](https://www.jeffgeerling.com/), author of [Ansible for DevOps](https://www.ansiblefordevops.com/), and forked by [bradthebuilder](https://bradthebuilder.me) in 2021.
