@@ -18,6 +18,28 @@ platforms:
     cpus: 1
     provider_options:
       video_type: "'vga'"
+  - name: ubuntu18
+    instance_raw_config_args:
+      - 'vagrant.plugins = ["vagrant-libvirt"]'
+    config_options:
+      ssh.keep_alive: yes
+      ssh.remote_user: "'vagrant'"
+    box: generic/ubuntu1804
+    memory: 1024
+    cpus: 1
+    provider_options:
+      video_type: "'vga'"
+  - name: ubuntu20
+    instance_raw_config_args:
+      - 'vagrant.plugins = ["vagrant-libvirt"]'
+    config_options:
+      ssh.keep_alive: yes
+      ssh.remote_user: "'vagrant'"
+    box: generic/ubuntu2010
+    memory: 1024
+    cpus: 1
+    provider_options:
+      video_type: "'vga'"
 provisioner:
   name: ansible
   playbooks:
