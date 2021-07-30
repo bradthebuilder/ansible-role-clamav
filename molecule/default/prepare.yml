@@ -2,7 +2,7 @@
 - name: Prepare
   hosts: all
   tasks:
-    - name: Update system
+    - name: Update system (CentOS)
       become: true
       yum:
         name: '*'
@@ -24,6 +24,21 @@
         replace: 'SELINUX=permissive'
       when: ansible_facts['distribution'] == "CentOS"
 
+    - name: Update apt cache
+      become: true
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when: ansible_facts['distribution'] == "Ubuntu"
+
+    - name: Update system (Ubuntu)
+      become: true
+      apt:
+        name: "*"
+        state: latest
+      when: ansible_facts['distribution'] == "Ubuntu"
+
     - name: Reboot
       become: true
       reboot:
+      when: ansible_facts['distribution'] == "CentOS"
