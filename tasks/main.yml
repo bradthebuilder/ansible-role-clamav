@@ -22,9 +22,6 @@
     - freshclam_result.stderr.find('locked by another process') != -1
   tags: ['skip_ansible_lint']
 
-#- include_tasks: setup-RedHat.yml
-#  when: ansible_os_family == 'RedHat'
-
 - name: Ensure Freshclam service is available.
   template:
     src: clamd-freshclam.service.j2
