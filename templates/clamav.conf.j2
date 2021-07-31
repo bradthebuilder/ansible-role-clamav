@@ -92,7 +92,7 @@ ExtendedDetectionInfo yes
 
 # Path to a local socket file the daemon will listen on.
 # Default: disabled (must be specified by a user)
-LocalSocket {{ clamav_daemon_localsocket }}
+#LocalSocket {{ clamav_daemon_localsocket }}
 
 # Sets the group ownership on the unix socket.
 # Default: disabled (the primary group of the user running clamd)
@@ -108,7 +108,7 @@ LocalSocket {{ clamav_daemon_localsocket }}
 
 # TCP port address.
 # Default: no
-#TCPSocket 3310
+TCPSocket 3310
 
 # TCP address.
 # By default we bind to INADDR_ANY, probably not wise.
@@ -116,7 +116,7 @@ LocalSocket {{ clamav_daemon_localsocket }}
 # from the outside world. This option can be specified multiple
 # times if you want to listen on multiple IPs. IPv6 is now supported.
 # Default: no
-#TCPAddr 127.0.0.1
+TCPAddr 127.0.0.1
 
 # Maximum length the queue of pending connections may grow to.
 # Default: 200
@@ -676,7 +676,7 @@ User {{ clamav_user }}
 # multiple OnAccessIncludePath directives but each directory must be added
 # in a separate line.
 # Default: disabled
-#OnAccessIncludePath /home
+OnAccessIncludePath /home
 #OnAccessIncludePath /students
 
 # Set the exclude paths. All subdirectories are also excluded.
@@ -687,7 +687,7 @@ User {{ clamav_user }}
 # If off, fanotify will only notify if the file scanned is a virus,
 # and not perform any blocking.
 # Default: no
-#OnAccessPrevention yes
+OnAccessPrevention yes
 
 # When using prevention, if this option is turned on, any errors that occur
 # during scanning will result in the event attempt being denied. This could
@@ -746,7 +746,7 @@ User {{ clamav_user }}
 # It has the same potential race condition limitations of the
 # OnAccessExcludeUID option.
 # Default: disabled
-#OnAccessExcludeUname clamav
+OnAccessExcludeUname {{ clamav_user }}
 
 # Number of times the OnAccess client will retry a failed scan due to
 # connection problems (or other issues).

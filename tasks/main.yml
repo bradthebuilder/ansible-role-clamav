@@ -56,6 +56,16 @@
     group: root
     mode: 0644
 
+- name: Copy over clamonacc.service file
+  become: true
+  template:
+    src: clamonacc.service.j2
+    dest: /etc/systemd/system/clamonacc.service
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_facts['distribution'] == "Ubuntu"
+
 - name: Copy over clamdscan logrotate file
   become: true
   template:
@@ -65,11 +75,30 @@
     group: root
     mode: 0644
 
-- name: Scribble clamdscan into logrotate state
+- name: Copy over clamonacc logrotate file
+  become: true
+  template:
+    src: clamonacc.j2
+    dest: /etc/logrotate.d/clamonacc
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Scribble clamdscan and clamonacc into logrotate state
   become: true
   command:
     cmd: logrotate /etc/logrotate.conf
   changed_when: false
+
+- name: Change configuration for the ClamAV daemon.
+  lineinfile:
+    path: "{{ clamav_daemon_config_path }}"
+    regexp: '{{ item.regexp }}'
+    line: "{{ item.line | default('') }}"
+    state: "{{ item.state | default('present') }}"
+    mode: 0644
+  with_items: "{{ clamav_daemon_configuration_changes }}"
+  when: ansible_facts['distribution'] == "Ubuntu"
 
 - name: Reload systemd after adding service (freshclam).
   systemd:
@@ -90,14 +119,11 @@
     daemon_reload: true
     name: "clamdscan.timer"
 
-- name: Change configuration for the ClamAV daemon.
-  lineinfile:
-    path: "{{ clamav_daemon_config_path }}"
-    regexp: '{{ item.regexp }}'
-    line: "{{ item.line | default('') }}"
-    state: "{{ item.state | default('present') }}"
-    mode: 0644
-  with_items: "{{ clamav_daemon_configuration_changes }}"
+- name: Reload systemd after adding service (clamonacc.service).
+  systemd:
+    state: stopped
+    daemon_reload: true
+    name: "clamonacc.service"
 
 - name: Ensure ClamAV daemon is running (if configured).
   become: true
@@ -126,3 +152,10 @@
     enabled: true
     state: started
 
+- name: Ensure ClamAV clamonacc service is enabled.
+  become: true
+  service:
+    name: "clamonacc.service"
+    enabled: true
+    state: started
+  #when: ansible_facts['distribution'] == "Ubuntu"
