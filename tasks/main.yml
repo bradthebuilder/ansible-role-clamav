@@ -22,8 +22,76 @@
     - freshclam_result.stderr.find('locked by another process') != -1
   tags: ['skip_ansible_lint']
 
-- include_tasks: setup-RedHat.yml
-  when: ansible_os_family == 'RedHat'
+#- include_tasks: setup-RedHat.yml
+#  when: ansible_os_family == 'RedHat'
+
+- name: Ensure Freshclam service is available.
+  template:
+    src: clamd-freshclam.service.j2
+    dest: /lib/systemd/system/clamd-freshclam.service
+    mode: 0644
+  register: freshclam_service_template
+
+- name: Copy over ClamAV config file
+  become: true
+  template:
+    src: clamav.conf.j2
+    dest: "{{ clamav_daemon_config_path }}"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Copy over clamdscan.service file
+  become: true
+  template:
+    src: clamdscan.service.j2
+    dest: /etc/systemd/system/clamdscan.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Copy over clamdscan.timer file
+  become: true
+  copy:
+    src: clamdscan.timer
+    dest: /etc/systemd/system/clamdscan.timer
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Copy over clamdscan logrotate file
+  become: true
+  template:
+    src: clamdscan.j2
+    dest: /etc/logrotate.d/clamdscan
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Scribble clamdscan into logrotate state
+  become: true
+  command:
+    cmd: logrotate /etc/logrotate.conf
+  changed_when: false
+
+- name: Reload systemd after adding service (freshclam).
+  systemd:
+    state: stopped
+    daemon_reload: true
+    name: "{{ clamav_freshclam_daemon }}"
+  when: freshclam_service_template.changed
+
+- name: Reload systemd after adding service (clamdscan.service).
+  systemd:
+    state: stopped
+    daemon_reload: true
+    name: "clamdscan.service"
+
+- name: Reload systemd after adding service (clamdscan.timer).
+  systemd:
+    state: stopped
+    daemon_reload: true
+    name: "clamdscan.timer"
 
 - name: Change configuration for the ClamAV daemon.
   lineinfile:

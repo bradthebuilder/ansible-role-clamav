@@ -8,6 +8,10 @@ clamav_daemon_configuration_changes:
     state: absent
   - regexp: '^.*LocalSocket .*$'
     line: 'LocalSocket {{ clamav_daemon_localsocket }}'
+  - regexp: '^User .*$'
+    line: 'User {{ clamav_user }}'
+  - regexp: '^LogFile .*$'
+    line: 'LogFile {{ clamav_log_file }}'
 
 # clamav_daemon: 'clamav-daemon'
 clamav_daemon_state: started

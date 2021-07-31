@@ -1,6 +1,9 @@
 ---
 clamav_daemon_localsocket: /var/run/clamav/clamd.ctl
 clamav_daemon_config_path: /etc/clamav/clamd.conf
+clamav_user: clamav
+clamav_log_file: /var/log/clamav/clamav.log
+clamdscan_log_file: /var/log/clamav/clamdscan.log
 __clamav_daemon: 'clamav-daemon'
 __clamav_freshclam_daemon: 'clamav-freshclam'
 __clamav_packages:

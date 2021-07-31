@@ -1,0 +1,14 @@
+[Unit]
+Description=ClamAV virus scan
+Requires={{ clamav_daemon }}.service
+After={{ clamav_daemon }}.service
+
+[Service]
+SuccessExitStatus=1 2
+ExecStart=-/usr/bin/clamdscan --fdpass --log={{ clamdscan_log_file }} /
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=clamdscan
+
+[Install]
+WantedBy=multi-user.target
