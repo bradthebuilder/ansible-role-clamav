@@ -131,6 +131,20 @@
     daemon_reload: true
     name: "clamonacc.service"
 
+- name: Set max user watches (currently running)
+  become: true
+  command:
+    cmd: "sysctl fs.inotify.max_user_watches=1048576"
+  when: ansible_facts['distribution'] == "CentOS"
+
+- name: Set max user watches (boot persistence)
+  become: true
+  lineinfile:
+    path: /etc/sysctl.conf
+    state: present
+    line: "fs.inotify.max_user_watches=1048576"
+  when: ansible_facts['distribution'] == "CentOS"
+
 - name: Ensure ClamAV daemon is running (if configured).
   become: true
   service:
