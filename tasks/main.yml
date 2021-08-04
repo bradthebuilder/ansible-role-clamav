@@ -139,11 +139,11 @@
     state: "{{ clamav_freshclam_daemon_state }}"
     enabled: "{{ clamav_freshclam_daemon_enabled }}"
 
-- name: Ensure ClamAV clamdscan service is enabled.
+- name: Ensure ClamAV clamdscan service is disabled (no scans on reboot).
   become: true
   service:
     name: "clamdscan.service"
-    enabled: true
+    enabled: false
 
 - name: Ensure ClamAV clamdscan timer is enabled.
   become: true
@@ -158,4 +158,3 @@
     name: "clamonacc.service"
     enabled: true
     state: started
-  #when: ansible_facts['distribution'] == "Ubuntu"
