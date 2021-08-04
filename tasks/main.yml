@@ -23,6 +23,7 @@
   tags: ['skip_ansible_lint']
 
 - name: Ensure Freshclam service is available.
+  become: true
   template:
     src: clamd-freshclam.service.j2
     dest: /lib/systemd/system/clamd-freshclam.service
@@ -91,6 +92,7 @@
   changed_when: false
 
 - name: Change configuration for the ClamAV daemon.
+  become: true
   lineinfile:
     path: "{{ clamav_daemon_config_path }}"
     regexp: '{{ item.regexp }}'
@@ -101,6 +103,7 @@
   when: ansible_facts['distribution'] == "Ubuntu"
 
 - name: Reload systemd after adding service (freshclam).
+  become: true
   systemd:
     state: stopped
     daemon_reload: true
@@ -108,18 +111,21 @@
   when: freshclam_service_template.changed
 
 - name: Reload systemd after adding service (clamdscan.service).
+  become: true
   systemd:
     state: stopped
     daemon_reload: true
     name: "clamdscan.service"
 
 - name: Reload systemd after adding service (clamdscan.timer).
+  become: true
   systemd:
     state: stopped
     daemon_reload: true
     name: "clamdscan.timer"
 
 - name: Reload systemd after adding service (clamonacc.service).
+  become: true
   systemd:
     state: stopped
     daemon_reload: true
