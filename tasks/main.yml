@@ -67,25 +67,6 @@
     mode: 0644
   when: ansible_facts['distribution'] == "Ubuntu"
 
-- name: Copy over clamonacc.service file
-  become: true
-  copy:
-    src: clamav-clamonacc.service
-    dest: /usr/lib/systemd/system/clamav-clamonacc.service
-    owner: root
-    group: root
-    mode: 0644
-  when: ansible_facts['distribution'] == "CentOS"
-
-- name: Copy over clamonacc-exclude file
-  become: true
-  template:
-    src: clamonacc-exclude.j2
-    dest: /root/clamonacc-exclude
-    owner: root
-    group: root
-    mode: 0644
-
 - name: Copy over clamdscan logrotate file
   become: true
   template:
