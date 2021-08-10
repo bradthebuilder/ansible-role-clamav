@@ -38,6 +38,14 @@
         state: latest
       when: ansible_facts['distribution'] == "Ubuntu"
 
+    - name: Create projects directory
+      become: true
+      file:
+        path: /home/vagrant/projects
+        state: directory
+        owner: vagrant
+        mode: 0700
+
     - name: Reboot
       become: true
       reboot:
