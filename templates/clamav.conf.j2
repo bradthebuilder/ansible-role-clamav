@@ -139,7 +139,7 @@ TCPAddr 127.0.0.1
 
 # Maximum number of threads running at the same time.
 # Default: 10
-#MaxThreads 20
+MaxThreads {{ ansible_processor_vcpus }}
 
 # Waiting for data from a client socket will timeout after this time (seconds).
 # Default: 120
@@ -166,7 +166,7 @@ TCPAddr 127.0.0.1
 # max is 1024).
 #
 # Default: 100
-#MaxQueue 200
+MaxQueue 200
 
 # Waiting for a new job will timeout after this time (seconds).
 # Default: 30
@@ -659,7 +659,7 @@ User {{ clamav_user }}
 # To prevent clamonacc from consuming all clamd's resources keep this lower
 # than clamd's max threads.
 # Default: 5
-#OnAccessMaxThreads 10
+OnAccessMaxThreads {{ ansible_processor_cores }}
 
 # Max amount of time (in milliseconds) that the OnAccess client should spend
 # for every connect, send, and recieve attempt when communicating with clamd
